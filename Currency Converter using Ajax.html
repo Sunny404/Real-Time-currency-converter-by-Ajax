@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #eef2f3;
+        }
+        .header {
+            text-align: center;
+            padding: 10px;
+            background-color: #4a90e2;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Real Time Currency Converter</div>
+    <div class="container">
+        <h1>Real Time Currency Converter</h1>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" placeholder="Enter amount">
+        </div>
+        <div class="form-group">
+            <label for="fromCurrency">From Currency:</label>
+            <select id="fromCurrency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="CHF">CHF</option>
+                <option value="CNY">CNY</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="toCurrency">To Currency:</label>
+            <select id="toCurrency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="CHF">CHF</option>
+                <option value="CNY">CNY</option>
+            </select>
+        </div>
+        <button onclick="convertCurrency()">Convert</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        async function convertCurrency() {
+            const amount = document.getElementById('amount').value;
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+
+            if (!amount || isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+
+            const apiKey = '02f3444565bc717fd47d54ea'; 
+            const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch exchange rates.');
+                }
+
+                const data = await response.json();
+                const rate = data.conversion_rates[toCurrency];
+                const convertedAmount = (amount * rate).toFixed(2);
+
+                document.getElementById('result').innerText = 
+                    `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+            } catch (error) {
+                console.error(error);
+                alert('Error fetching exchange rates. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
